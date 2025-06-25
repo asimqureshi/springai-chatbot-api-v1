@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <title>Text Embedding</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navigation {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-title {
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background-color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .embed-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .embed-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .embed-content {
+            padding: 30px;
+        }
+
+        .embed-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+        }
+
+        .embed-textarea {
+            width: 100%;
+            min-height: 300px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .embed-textarea:focus {
+            border-color: #667eea;
+        }
+
+        .embed-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            align-self: flex-start;
+        }
+
+        .embed-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .embed-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .file-label:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .file-info {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .clear-button {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .clear-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        .clear-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .embed-container {
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .embed-content {
+                padding: 20px;
+            }
+
+            .embed-textarea {
+                min-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-title">🤖 AI Assistant</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">💬 Chat</a>
+                <a href="embed.html" class="nav-link active">📝 Embed</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="embed-container">
+            <div class="embed-header">
+                📝 Text Embedding
+            </div>
+
+            <div class="embed-content">
+                <form class="embed-form" id="embedForm">
+                    <div class="file-upload">
+                        <input type="file" id="fileInput" class="file-input" accept=".txt,.md,.csv">
+                        <label for="fileInput" class="file-label">
+                            📁 Choose a text file to upload
+                        </label>
+                        <span class="file-info" id="fileInfo"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="embedText" class="form-label">Text to Embed:</label>
+                        <textarea
+                            id="embedText"
+                            class="embed-textarea"
+                            placeholder="Enter or paste your text here... You can also upload a file above."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="embed-button" id="embedButton">
+                            🚀 Embed
+                        </button>
+                        <button type="button" class="clear-button" id="clearButton">
+                            🗑️ Delete All
+                        </button>
+                    </div>
+                </form>
+
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class EmbedProcessor {
+            constructor() {
+                this.embedForm = document.getElementById('embedForm');
+                this.embedText = document.getElementById('embedText');
+                this.embedButton = document.getElementById('embedButton');
+                this.clearButton = document.getElementById('clearButton');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.fileInput = document.getElementById('fileInput');
+                this.fileInfo = document.getElementById('fileInfo');
+
+                this.apiUrl = '/chatbot/embed';
+
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                this.embedForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.processEmbedding();
+                });
+
+                this.clearButton.addEventListener('click', () => {
+                    this.clearAllEmbeddings();
+                });
+
+                this.fileInput.addEventListener('change', (e) => {
+                    this.handleFileUpload(e.target.files[0]);
+                });
+            }
+
+            async handleFileUpload(file) {
+                if (!file) return;
+
+                this.fileInfo.textContent = `Selected: ${file.name} (${this.formatFileSize(file.size)})`;
+
+                try {
+                    const text = await this.readFileAsText(file);
+                    this.embedText.value = text;
+                } catch (error) {
+                    console.error('Error reading file:', error);
+                    this.showStatus('Error reading file. Please try again.', 'error');
+                }
+            }
+
+            readFileAsText(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = (e) => reject(e);
+                    reader.readAsText(file);
+                });
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            async processEmbedding() {
+                const text = this.embedText.value.trim();
+                if (!text) {
+                    this.showStatus('Please enter some text to embed.', 'error');
+                    return;
+                }
+
+                // Disable button and show loading state
+                this.embedButton.disabled = true;
+                this.embedButton.textContent = '⏳ Processing...';
+                this.hideStatus();
+
+                try {
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text: text })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.text();
+                    this.showStatus(`✅ ${result} - Text has been successfully embedded!`, 'success');
+                    this.embedText.value = '';
+
+                } catch (error) {
+                    console.error('Error processing embedding:', error);
+                    this.showStatus('❌ Error processing embedding. Please try again.', 'error');
+                } finally {
+                    // Re-enable button
+                    this.embedButton.disabled = false;
+                    this.embedButton.textContent = '🚀 Process Embedding';
+                }
+            }
+
+            showStatus(message, type) {
+                this.statusMessage.textContent = message;
+                this.statusMessage.className = `status-message ${type}`;
+                this.statusMessage.style.display = 'block';
+            }
+
+            hideStatus() {
+                this.statusMessage.style.display = 'none';
+            }
+
+            async clearAllEmbeddings() {
+                // Show confirmation dialog
+                if (!confirm('Are you sure you want to clear all embeddings? This action cannot be undone.')) {
+                    return;
+                }
+
+                // Disable buttons and show loading state
+                this.clearButton.disabled = true;
+                this.embedButton.disabled = true;
+                this.clearButton.textContent = '⏳ Clearing...';
+                this.hideStatus();
+
+                try {
+                    const response = await fetch(this.apiUrl, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.text();
+                    this.showStatus(`✅ ${result} - All embeddings have been cleared successfully!`, 'success');
+                    
+                    // Clear the form
+                    this.embedText.value = '';
+                    this.fileInput.value = '';
+                    this.fileInfo.textContent = '';
+
+                } catch (error) {
+                    console.error('Error clearing embeddings:', error);
+                    this.showStatus('❌ Error clearing embeddings. Please try again.', 'error');
+                } finally {
+                    // Re-enable buttons
+                    this.clearButton.disabled = false;
+                    this.embedButton.disabled = false;
+                    this.clearButton.textContent = '🗑️ Clear All Embeddings';
+                }
+            }
+        }
+
+        // Initialize the embed processor when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new EmbedProcessor();
+        });
+    </script>
+</body>
+</html> 
