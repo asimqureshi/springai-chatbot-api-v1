@@ -1,6 +1,6 @@
-# Chatbot API
+# Chatbot API powered by Spring AI
 
-A Spring Boot-based chatbot application powered by LangChain4j, OpenAI and PostgreSQL with pgvector for semantic search and embeddings.
+A Spring Boot-based chatbot application powered by Spring AI, OpenAI and PostgreSQL with pgvector for semantic search and embeddings.
 
 ## 🚀 Features
 
