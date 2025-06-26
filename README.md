@@ -22,7 +22,6 @@ A Spring Boot-based chatbot application powered by LangChain4j, OpenAI and Postg
 ## 📋 Prerequisites
 
 - Java 21 or higher
-- Maven 3.6+
 - OpenAI API key
 
 ## 🛠️ Installation & Setup
@@ -58,10 +57,10 @@ The Testcontainers setup automatically:
 
 ```bash
 # Build the project
-mvn clean install
+./mvnw clean install
 
 # Run the application (uses Testcontainers automatically)
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 The application will start on `http://localhost:8080`
