@@ -1,6 +1,6 @@
 # Chatbot API
 
-A Spring Boot-based chatbot application powered by LangChain4j, OpenAI, and PostgreSQL with pgvector for semantic search and embeddings.
+A Spring Boot-based chatbot application powered by LangChain4j, OpenAI and PostgreSQL with pgvector for semantic search and embeddings.
 
 ## 🚀 Features
 
@@ -23,7 +23,6 @@ A Spring Boot-based chatbot application powered by LangChain4j, OpenAI, and Post
 
 - Java 21 or higher
 - Maven 3.6+
-- PostgreSQL 12+ with pgvector extension
 - OpenAI API key
 
 ## 🛠️ Installation & Setup
@@ -126,15 +125,10 @@ langchain-chatbot-api-v1/
 │   │   │       └── EmbedModel.java          # Embedding request model
 │   │   └── resources/
 │   │       ├── application.yml              # Application configuration (uses Testcontainers)
+|   |       ├── init.sql   
 │   │       └── static/
 │   │           ├── index.html               # Chat interface
 │   │           └── embed.html               # Embedding interface
-│   └── test/
-│       ├── java/lab/maq/langchain/chatbot/
-│       │   ├── TestConfig.java              # Testcontainers configuration
-│       │   └── ChatBotServiceTest.java      # Test classes
-│       └── resources/
-│           └── init.sql                     # Database initialization script
 └── pom.xml                                  # Maven dependencies
 ```
 
@@ -160,17 +154,12 @@ langchain-chatbot-api-v1/
 
 ### Common Issues
 
-1. **Database Connection Error**
-   - Ensure PostgreSQL is running
-   - Verify pgvector extension is installed
-   - Check database credentials in `application.yml`
-
-2. **OpenAI API Errors**
+1. **OpenAI API Errors**
    - Verify your API key is correct
    - Check API key permissions
    - Ensure sufficient API credits
 
-3. **Port Already in Use**
+2. **Port Already in Use**
    - Change the port in `application.yml`
    - Or kill the process using the port
 
@@ -188,7 +177,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- [LangChain4j](https://github.com/langchain4j/langchain4j) for the Java AI framework
+- [Spring AI](https://docs.spring.io/spring-ai/reference/index.html) for the Spring AI framework
+- [Awesome Spring AI](https://github.com/spring-ai-community/awesome-spring-ai) for Spring AI examples
 - [OpenAI](https://openai.com/) for the AI models
 - [pgvector](https://github.com/pgvector/pgvector) for PostgreSQL vector operations
 - [Spring Boot](https://spring.io/projects/spring-boot) for the application framework 
