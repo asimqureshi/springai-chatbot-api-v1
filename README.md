@@ -17,7 +17,7 @@ A Spring Boot-based chatbot application powered by Spring AI, OpenAI and Postgre
 - **AI Models**: OpenAI GPT-4 and OpenAI Text Embedding 3 Small
 - **Database**: PostgreSQL with pgvector extension
 - **Frontend**: Vanilla JavaScript with modern CSS
-- **Embedding Store**: LangChain4j PgVector Embedding Store
+- **Embedding Store**: Spring AI PgVector Embedding Store
 
 ## 📋 Prerequisites
 
@@ -111,11 +111,11 @@ DELETE /chatbot/embed
 ## 🏗️ Project Structure
 
 ```
-langchain-chatbot-api-v1/
+springai-chatbot-api-v1/
 ├── src/
 │   ├── main/
-│   │   ├── java/lab/maq/langchain/chatbot/
-│   │   │   ├── ChatBotConfiguration.java    # Spring configuration
+│   │   ├── java/lab/maq/springai/chatbot/
+│   │   │   ├── ChatBotConfig.java    # Spring configuration
 │   │   │   ├── Main.java                    # Application entry point
 │   │   │   └── impl/
 │   │   │       ├── ChatBotController.java   # REST endpoints
@@ -124,7 +124,8 @@ langchain-chatbot-api-v1/
 │   │   │       └── EmbedModel.java          # Embedding request model
 │   │   └── resources/
 │   │       ├── application.yml              # Application configuration (uses Testcontainers)
-|   |       ├── init.sql   
+|   |       ├── init.sql                     # Vector store initialization script
+|   |       ├── qa.prompt                    # System Prompt
 │   │       └── static/
 │   │           ├── index.html               # Chat interface
 │   │           └── embed.html               # Embedding interface
