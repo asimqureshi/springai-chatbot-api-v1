@@ -10,6 +10,7 @@ A Spring Boot-based chatbot application powered by LangChain4j, OpenAI and Postg
 - **Modern UI**: Beautiful, responsive web interface with real-time chat
 - **File Upload**: Support for text files (.txt, .md, .csv) for embedding
 - **Embedding Management**: Clear all embeddings functionality
+- **Get Current Date/Time**: Ask the chatbot for the current date or time, powered by an MCP server (runs in Docker)
 
 ## 🏗️ Architecture
 
@@ -44,7 +45,11 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 **Note**: This demo uses Testcontainers for the database, so no external PostgreSQL setup is required!
 
-### 3. Testcontainers Setup
+### 3. MCP Server Configuration
+
+The chatbot uses an MCP (Model Context Protocol) server to answer questions about the current date and time. This is configured in `src/main/resources/mcp-servers.json` and runs the `mcp/time` Docker image automatically. No manual setup is required—Docker must be installed and running on your system.
+
+### 4. Testcontainers Setup
 
 This demo automatically uses Testcontainers to provide an embedded PostgreSQL database with pgvector extension. This eliminates the need for any external database setup.
 
@@ -107,6 +112,17 @@ Content-Type: application/json
 ```http
 DELETE /chatbot/embed
 ```
+
+## ⏰ Date/Time via MCP Server
+
+You can now ask the chatbot questions like:
+
+- "What is the current date?"
+- "Tell me the time now."
+
+The chatbot will use the configured MCP server (via Docker) to fetch and return the current date and time.
+
+**Note:** The MCP server is defined in `src/main/resources/mcp-servers.json` and is started automatically when needed. Ensure Docker is running on your machine for this feature to work.
 
 ## 🏗️ Project Structure
 
