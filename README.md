@@ -141,6 +141,7 @@ springai-chatbot-api-v1/
 │   │   └── resources/
 │   │       ├── application.yml              # Application configuration (uses Testcontainers)
 |   |       ├── init.sql                     # Vector store initialization script
+|   |       ├── mcp-servers.json             # MCP server configuration
 |   |       ├── qa.prompt                    # System Prompt
 │   │       └── static/
 │   │           ├── index.html               # Chat interface
