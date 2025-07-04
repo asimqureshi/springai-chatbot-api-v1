@@ -6,7 +6,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.5.3</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath/>
 </parent>
 <groupId>example.maq.learnai</groupId>
 <artifactId>chatbot-api-v1</artifactId>
@@ -60,23 +60,9 @@
         <artifactId>dotenv-java</artifactId>
         <version>3.0.0</version>
     </dependency>
-    
-    <!-- Testcontainers for embedded PostgreSQL -->
-    <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>junit-jupiter</artifactId>
-    </dependency>
     <dependency>
         <groupId>org.testcontainers</groupId>
         <artifactId>postgresql</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>jdbc</artifactId>
     </dependency>
 </dependencies>
 <dependencyManagement>
