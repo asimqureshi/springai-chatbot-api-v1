@@ -1,5 +1,6 @@
 package lab.maq.langchain.chatbot;
 
+import io.modelcontextprotocol.client.McpSyncClient;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.SneakyThrows;
@@ -10,6 +11,7 @@ import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvi
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Configuration
 public class ChatBotConfig {
@@ -55,7 +58,7 @@ public class ChatBotConfig {
 
     @SneakyThrows
     @Bean
-    public ChatClient chatClient(VectorStore vectorStore, ChatModel chatModel, ChatMemory chatMemory) {
+    public ChatClient chatClient(VectorStore vectorStore, ChatModel chatModel, ChatMemory chatMemory, List<McpSyncClient> mcpSyncClients) {
 
         PromptTemplate template = PromptTemplate.builder()
                 .resource(new ClassPathResource("qa.prompt"))
@@ -70,6 +73,7 @@ public class ChatBotConfig {
                                 .build()
 
                 )
+                .defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpSyncClients))
                 .build();
     }
 

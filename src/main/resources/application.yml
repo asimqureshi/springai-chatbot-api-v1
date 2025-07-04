@@ -19,3 +19,7 @@ spring:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
         dimensions: 1536
+    mcp:
+      client:
+        stdio:
+          servers-configuration: classpath:mcp-servers.json
